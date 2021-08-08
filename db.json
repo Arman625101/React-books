@@ -1,0 +1,16 @@
+{
+  "genres": [
+    { "name": "horror", "id": 1 },
+    { "name": "Mytery", "id": 2 },
+    { "name": "Romance", "id": 3 }
+  ],
+  "authors": [
+    { "name": "Arman", "genre": "Horror", "id": 1 },
+    { "name": "Smbo", "genre": "Horror", "id": 2 },
+    { "name": "Davo", "genre": "Romance", "id": 3 }
+  ],
+  "books": [
+    { "name": "Voske dzknik", "genre": "Horror", "author": "Arman", "id": 1 },
+    { "name": "Karmir dzknik", "genre": "Horror", "author": "Smbo", "id": 2 }
+  ]
+}

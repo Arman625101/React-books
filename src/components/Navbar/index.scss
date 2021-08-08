@@ -1,0 +1,22 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  border-bottom: 2px solid #1e90ff;
+  a {
+    width: 100%;
+    padding: 10px 20px;
+    border-right: 2px solid #1e90ff;
+    transition: all 0.2s;
+    &:last-child {
+      border: none;
+    }
+    &:hover {
+      color: #fff;
+      background-color: #1e90ff;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+        rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+      transition: all 0.2s;
+    }
+  }
+}
