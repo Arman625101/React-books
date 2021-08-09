@@ -1,12 +1,12 @@
 import "./index.scss";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <nav>
-      <Link to="/genres">Genres</Link>
-      <Link to="/authors">Authors</Link>
-      <Link to="/books">Books</Link>
+      <NavLink to="/genres">Genres</NavLink>
+      <NavLink to="/authors">Authors</NavLink>
+      <NavLink to="/books">Books</NavLink>
     </nav>
   );
 };
