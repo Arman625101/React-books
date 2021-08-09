@@ -1,20 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { usePost } from "../../utils/useFetch";
 import { useForm } from "react-hook-form";
+import { DataContext } from "../../contexts/Data";
 import "./index.scss";
 
-const Modal = ({ handleRefresh, handleCloseModal, mode, genres, authors }) => {
+const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
+  const authors = useContext(DataContext).authors;
+  const genres = useContext(DataContext).genres;
   const [result, setResult] = useState("");
-  const [newAuthors, setNewAuthors] = useState(authors);
+  const [newAuthors, setNewAuthors] = useState([]);
   const { register, handleSubmit } = useForm();
   const location = useLocation();
+  usePost(location.pathname, result);
 
-  const { data } = usePost(location.pathname, result);
-  if (data) {
-    console.log(data);
-  }
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     setResult(JSON.stringify(data));
     handleRefresh();
   };
@@ -87,7 +87,6 @@ const Modal = ({ handleRefresh, handleCloseModal, mode, genres, authors }) => {
                 </div>
               )}
               <button type="submit">Create</button>
-              <p>{result}</p>
             </form>
           )}
         </div>

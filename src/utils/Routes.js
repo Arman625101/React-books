@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch, Redirect, useLocation } from "react-router-dom";
 import Genres from "../components/Genres";
 import Authors from "../components/Authors";
 import Books from "../components/Books";
-import { useFetch } from "./useFetch";
+import { useDelete } from "./useFetch";
 
-import loader from "./loading.svg";
+// import loader from "./loading.svg";
 
-function Routes({ toRefresh }) {
+function Routes({ handleRefresh, toRefresh }) {
+  const [id, setId] = useState();
   const location = useLocation();
-  const { data, isPending } = useFetch(location.pathname, toRefresh);
+  const { data } = useDelete(location.pathname, id);
+
+  useEffect(() => {
+    setId(null);
+  }, [data]);
+
+  const handleDelete = (id) => {
+    setId(id);
+    handleRefresh();
+  };
 
   return (
     <Switch>
@@ -17,26 +27,13 @@ function Routes({ toRefresh }) {
         <Redirect to="/genres" />
       </Route>
       <Route path="/genres">
-        {isPending && <img src={loader} alt="Loading..." />}
-        {!isPending && (
-          <Genres
-            genres={location.pathname === "/genres" && data ? data : []}
-          />
-        )}
+        <Genres handleDelete={handleDelete} />
       </Route>
       <Route path="/authors">
-        {isPending && <img src={loader} alt="Loading..." />}
-        {!isPending && (
-          <Authors
-            authors={location.pathname === "/authors" && data ? data : []}
-          />
-        )}
+        <Authors handleDelete={handleDelete} />
       </Route>
       <Route path="/books">
-        {isPending && <img src={loader} alt="Loading..." />}
-        {!isPending && (
-          <Books books={location.pathname === "/books" && data ? data : []} />
-        )}
+        <Books handleDelete={handleDelete} />
       </Route>
     </Switch>
   );

@@ -10,7 +10,7 @@ nav {
     &:last-child {
       border: none;
     }
-    &:hover {
+    &.active {
       color: #fff;
       background-color: #1e90ff;
       box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,

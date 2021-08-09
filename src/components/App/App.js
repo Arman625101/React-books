@@ -3,23 +3,25 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "../../utils/Routes";
 import Navbar from "../Navbar/Navbar";
 import Modal from "../Modal/Modal";
-import { useFetchForSelect } from "../../utils/useFetch";
+import { useFetch } from "../../utils/useFetch";
+import { DataContext } from "../../contexts/Data";
 import "./App.scss";
 
 function App() {
-  const [toRefresh, setToRefresh] = useState(false);
-  const [genres, setGenres] = useState([]);
-  const [authors, setAuthors] = useState([]);
+  const [dataContext, setDataContext] = useState({});
+  const [toRefresh, setToRefresh] = useState(true);
   const [isShowModal, setIsShowModal] = useState(false);
   const [mode, setMode] = useState("");
 
-  const { data } = useFetchForSelect(toRefresh);
+  const { data } = useFetch(toRefresh);
 
   useEffect(() => {
-    console.log("EFFECT", data);
-    if (data) {
-      setGenres(data.genres);
-      setAuthors(data.authors);
+    if (
+      (Object.entries(data).length !== 0 && data.constructor === Object) ||
+      toRefresh
+    ) {
+      setDataContext(data);
+      setToRefresh(false);
     }
   }, [data, toRefresh]);
 
@@ -29,32 +31,31 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <div className="content">
-          <button
-            onClick={() => {
-              setIsShowModal(true);
-              setToRefresh(false);
-              setMode("");
-            }}
-          >
-            Add new
-          </button>
-          <Routes toRefresh={toRefresh} />
+    <DataContext.Provider value={dataContext}>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <div className="content">
+            <button
+              onClick={() => {
+                setIsShowModal(true);
+                setMode("");
+              }}
+            >
+              Add new
+            </button>
+            <Routes handleRefresh={handleRefresh} toRefresh={toRefresh} />
+          </div>
         </div>
-      </div>
-      {isShowModal && (
-        <Modal
-          authors={authors}
-          genres={genres}
-          handleRefresh={handleRefresh}
-          mode={mode}
-          handleCloseModal={() => setIsShowModal(false)}
-        />
-      )}
-    </Router>
+        {isShowModal && (
+          <Modal
+            handleRefresh={handleRefresh}
+            mode={mode}
+            handleCloseModal={() => setIsShowModal(false)}
+          />
+        )}
+      </Router>
+    </DataContext.Provider>
   );
 }
 

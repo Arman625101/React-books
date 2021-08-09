@@ -1,57 +1,23 @@
 {
   "genres": [
     {
-      "name": "horror",
-      "id": 1
-    },
-    {
-      "name": "Mytery",
+      "name": "Horror",
       "id": 2
-    },
-    {
-      "name": "Romance",
-      "id": 3
     }
   ],
   "authors": [
     {
-      "name": "Arman",
+      "name": "gqhqhg",
       "genre": "Horror",
-      "id": 1
-    },
-    {
-      "name": "Smbo",
-      "genre": "Horror",
-      "id": 2
-    },
-    {
-      "name": "Davo",
-      "genre": "Romance",
-      "id": 3
-    },
-    {
-      "name": "AAAAAAAA",
-      "genre": "horror",
       "id": 4
-    },
-    {
-      "name": "Armannaaa",
-      "genre": "horror",
-      "id": 5
     }
   ],
   "books": [
     {
-      "name": "Voske dzknik",
+      "name": "hqhqwhq",
       "genre": "Horror",
-      "author": "Arman",
+      "author": "gqhqhg",
       "id": 1
-    },
-    {
-      "name": "Karmir dzknik",
-      "genre": "Horror",
-      "author": "Smbo",
-      "id": 2
     }
   ]
 }
