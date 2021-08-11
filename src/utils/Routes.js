@@ -1,40 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import React from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Genres from "../components/Genres";
 import Authors from "../components/Authors";
 import Books from "../components/Books";
-import { useDelete } from "./useFetch";
+import NotFound from "../components/NotFound";
 
 // import loader from "./loading.svg";
 
-function Routes({ handleRefresh, toRefresh }) {
-  const [id, setId] = useState();
-  const location = useLocation();
-  const { data } = useDelete(location.pathname, id);
-
-  useEffect(() => {
-    setId(null);
-  }, [data]);
-
-  const handleDelete = (id) => {
-    setId(id);
-    handleRefresh();
-  };
-
+function Routes() {
   return (
     <Switch>
       <Route exact path="/">
         <Redirect to="/genres" />
       </Route>
-      <Route path="/genres">
-        <Genres handleDelete={handleDelete} />
-      </Route>
-      <Route path="/authors">
-        <Authors handleDelete={handleDelete} />
-      </Route>
-      <Route path="/books">
-        <Books handleDelete={handleDelete} />
-      </Route>
+      <Route path="/genres" component={Genres}></Route>
+      <Route path="/authors" component={Authors}></Route>
+      <Route path="/books" component={Books}></Route>
+      <Route component={NotFound} />
     </Switch>
   );
 }

@@ -1,23 +1,56 @@
 import { useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { usePost } from "../../utils/useFetch";
 import { useForm } from "react-hook-form";
 import { DataContext } from "../../contexts/Data";
 import "./index.scss";
 
-const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
+const Modal = ({
+  handleRefresh,
+  handleCloseModal,
+  mode,
+  editItem,
+  deleteId,
+}) => {
   const authors = useContext(DataContext).authors;
   const genres = useContext(DataContext).genres;
-  const [result, setResult] = useState("");
   const [newAuthors, setNewAuthors] = useState([]);
   const { register, handleSubmit } = useForm();
   const location = useLocation();
-  usePost(location.pathname, result);
+  const baseUrl = "http://localhost:8000";
 
   const onSubmit = (data) => {
-    setResult(JSON.stringify(data));
-    handleRefresh();
+    const id =
+      mode === "create"
+        ? ""
+        : mode === "edit"
+        ? "/" + editItem.id
+        : "/" + deleteId;
+    const url = `${baseUrl + location.pathname + id}`;
+    const opts = {
+      method: mode === "edit" ? "PUT" : mode === "delete" ? "DELETE" : "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: mode !== "delete" ? JSON.stringify(data) : null,
+    };
+    fetch(url, opts)
+      .then((res) => {
+        if (!res.ok) {
+          throw Error("could not fetch the data");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        handleRefresh();
+      })
+      .catch((err) => {
+        if (err.name === "AbortError") {
+          console.log("fetch aborted");
+        }
+      });
   };
+
   const handleChange = (e) => {
     const newArr = authors.filter((el) => el.genre === e.target.value);
     setNewAuthors(newArr);
@@ -33,9 +66,23 @@ const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
             </div>
           </div>
         </div>
-        <div className="body">
+        <div className={mode === "delete" ? "body delete" : "body"}>
           {mode === "delete" ? (
-            <p>Delete</p>
+            <>
+              <h1>Are you sure?</h1>
+              <p>
+                Do you really want to delete this record? This process cannot be
+                undone.
+              </p>
+              <div>
+                <button className="cancel" onClick={() => handleCloseModal()}>
+                  Cancel
+                </button>
+                <button className="delete" onClick={() => onSubmit()}>
+                  Delete
+                </button>
+              </div>
+            </>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="field">
@@ -45,6 +92,7 @@ const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
                     minLength: 3,
                     pattern: /[A-Za-z]/,
                   })}
+                  defaultValue={editItem.name || ""}
                   placeholder="Name"
                   required
                 />
@@ -58,9 +106,15 @@ const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
                     })}
                     onChange={handleChange}
                   >
-                    <option disabled value="default">
-                      Select Genre...
-                    </option>
+                    {(mode === "edit" && editItem && (
+                      <option disabled value="default">
+                        {editItem.genre}
+                      </option>
+                    )) || (
+                      <option disabled value="default">
+                        Select Genre...
+                      </option>
+                    )}
                     {genres &&
                       genres.map((genre) => (
                         <option key={genre.id}>{genre.name}</option>
@@ -76,9 +130,15 @@ const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
                       required: true,
                     })}
                   >
-                    <option disabled value="default">
-                      Select Author...
-                    </option>
+                    {(mode === "edit" && editItem && (
+                      <option disabled value="default">
+                        {editItem.author}
+                      </option>
+                    )) || (
+                      <option disabled value="default">
+                        Select Author...
+                      </option>
+                    )}
                     {newAuthors &&
                       newAuthors.map((author) => (
                         <option key={author.id}>{author.name}</option>
@@ -86,7 +146,9 @@ const Modal = ({ handleRefresh, handleCloseModal, mode }) => {
                   </select>
                 </div>
               )}
-              <button type="submit">Create</button>
+              <button type="submit">
+                {mode === "edit" ? "Edit" : "Create"}
+              </button>
             </form>
           )}
         </div>

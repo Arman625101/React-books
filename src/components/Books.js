@@ -2,15 +2,25 @@ import { useContext } from "react";
 import { DataContext } from "../contexts/Data";
 
 const Books = ({ handleDelete }) => {
-  const books = useContext(DataContext).books;
+  const data = useContext(DataContext);
+  const books = data.books;
   return (
     <ul>
       {books &&
         books.map((book) => (
           <li key={book.id}>
-            {book.name}
-            <button>Edit</button>
-            <button onClick={() => handleDelete(book.id)}>Delete</button>
+            <p>{book.name}</p>
+            <div>
+              <button className="edit" onClick={() => data.editModal(book)}>
+                Edit
+              </button>
+              <button
+                className="delete"
+                onClick={() => data.deleteModal(book.id)}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
     </ul>
